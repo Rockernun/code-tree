@@ -155,34 +155,43 @@ public class Main {
         int r = rectangle[0];
         int c = rectangle[1];
         int len = rectangle[2];
-
+        
+        // 덮어쓸 정사각형 2차원 배열
         int[][] temp = new int[len][len];
         
-        for (int i = 0; i < len; i++) {
-            for (int j = 0; j < len; j++) {
-                int value = maze[r + len - 1 - j][c + i];
-                temp[i][j] = (value > 0) ? value - 1 : 0; 
+        for (int x = r; x < r + len; x++) {
+            for (int y = c; y < c + len; y++) {
+                int a = x - r;
+                int b = y - c;
+                
+                int na = b;
+                int nb = len - 1 - a;
+                
+                temp[na][nb] = maze[x][y] > 0 ? maze[x][y] - 1 : 0;
             }
         }
         
-        for (int i = 0; i < len; i++) {
-            for (int j = 0; j < len; j++) {
-                maze[r + i][c + j] = temp[i][j];
+        for (int na = 0; na < len; na++) {
+            for (int nb = 0; nb < len; nb++) {
+                maze[r + na][c + nb] = temp[na][nb];
             }
         }
-
+        
         for (int i = 0; i < users.length; i++) {
             int x = users[i][0], y = users[i][1];
-            if (x == 0 && y == 0) continue; 
-            if (inside(x, y, r, c, len)) {
-                users[i][0] = r + (y - c);
-                users[i][1] = c + (len - 1 - (x - r));
-            }
+            if (x == 0 && y == 0) continue;
+            if (!inside(x, y, r, c, len)) continue;
+            
+            int a = x - r, b = y - c;
+            int na = b, nb = len - 1 - a;
+            users[i][0] = r + na;
+            users[i][1] = c + nb;
         }
         
-        int ex = exit[0], ey = exit[1];
-        exit[0] = r + (ey - c);
-        exit[1] = c + (len - 1 - (ex - r));
+        int a = exit[0] - r, b = exit[1] - c;
+        int na = b, nb = len - 1 - a;
+        exit[0] = r + na;
+        exit[1] = c + nb;
     }
     
 }
